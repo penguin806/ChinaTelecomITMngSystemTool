@@ -1,6 +1,7 @@
 # v1.0	Feb 2nd, 2021
 # Repo: https://github.com/penguin806/ChinaTelecomITMngSystemTool.git
 import requests
+import datetime
 import time
 import json
 from requests_html import HTMLSession
@@ -10,7 +11,7 @@ userName = '0746zhoud'
 # cookie
 jSessionId = "B63CD5079B5F685B3384A6EC958BFCF0"
 # 时间间隔
-timeInterval = 5
+timeInterval = 1
 posId = 'w20789'
 
 def requestEventPage():
@@ -53,7 +54,9 @@ def requestEventPage():
 
 	resultJson["rows"].reverse()
 	for row in resultJson["rows"]:
-		if row["statusinfo"] == '新生成' and row["remindername"] == '' and row['sourse'] == '10000号系统':
+		timeDiff = (datetime.datetime.now() - datetime.datetime.strptime(row['createdate'], '%Y-%m-%d %H:%M:%S')).total_seconds()
+		# print(timeDiff)
+		if row["statusinfo"] == '新生成' and row["remindername"] == '' and row['sourse'] == '10000号系统' and timeDiff <= 20:
 			# print(row["statusinfo"] + " " + row["requestid"])
 			# print(row["title"])
 			result = requests.post(
@@ -75,7 +78,7 @@ def requestEventPage():
 			if result.text == "0":
 				print(row["statusinfo"] + " " + row["requestid"])
 				print(row["title"])
-				print("Response: "  + str(result.status_code) + " / " + result.text + "\n")
+				print("Response: "  + str(result.status_code) + " / " + result.text + "\n\n")
 
 
 if __name__ == '__main__':
