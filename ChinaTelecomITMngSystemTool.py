@@ -1,4 +1,4 @@
-# v1.0	Feb 2nd, 2021 
+# v1.0	Feb 2nd, 2021
 # Repo: https://github.com/penguin806/ChinaTelecomITMngSystemTool.git
 import requests
 import time
@@ -6,11 +6,12 @@ import json
 from requests_html import HTMLSession
 
 #用户名
-userName = '0746tangr'
+userName = '0746zhoud'
 # cookie
-jSessionId = "98FDFDF0B0FABCD59BAC36B02E21985D"
+jSessionId = "B63CD5079B5F685B3384A6EC958BFCF0"
 # 时间间隔
-timeInterval = 10
+timeInterval = 5
+posId = 'w20789'
 
 def requestEventPage():
 	session = HTMLSession()
@@ -27,7 +28,7 @@ def requestEventPage():
 
 
 	form = {
-		'posID':'w746005', 
+		'posID': posId,
 		'reqDealL':'requestService',
 		'areaId': '746',
 		'filterCon':'', 
@@ -37,7 +38,7 @@ def requestEventPage():
 		'selectedReq':'',
 		'isSerDesk': 'true',
 		'lockKey': lockKey,
-		'console': 'w746005:requestService',
+		'console': posId + ':requestService',
 		'qareaId': '100',
 		'orderSource': '',
 		'orderNo': '',
@@ -52,7 +53,7 @@ def requestEventPage():
 
 	resultJson["rows"].reverse()
 	for row in resultJson["rows"]:
-		if row["statusinfo"] == '新生成' and row["remindername"] == '':
+		if row["statusinfo"] == '新生成' and row["remindername"] == '' and row['sourse'] == '10000号系统':
 			# print(row["statusinfo"] + " " + row["requestid"])
 			# print(row["title"])
 			result = requests.post(
@@ -65,7 +66,7 @@ def requestEventPage():
 					'method' : 'enableLock',
 					'reqId' : row["requestid"],
 					'childId' : 1,
-					'posID' : 'w746005',
+					'posID' : posId,
 					'lockKey' : lockKey
 					# 'lockKey' : 'A16F651F5E00C3816FA03E15D65851CA1E6C6F636B3C3C3037343674616E67721346221V20CA4'
 				},
